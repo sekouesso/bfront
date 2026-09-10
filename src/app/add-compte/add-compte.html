@@ -1,0 +1,72 @@
+<form [formGroup]="accountForm" (ngSubmit)="onSubmit()" class="p-4 border rounded shadow-sm bg-light">
+  <h3 class="mb-4 text-primary">Créer un Compte Bancaire</h3>
+
+  <!-- 1. Sélection du Client (Associé via Spring Boot) -->
+  <div class="form-group mb-3">
+    <label for="clientId" class="form-label font-weight-bold">Client Titulaire</label>
+    <select id="clientId" formControlName="clientId" class="form-select">
+      <option [ngValue]="null" disabled>-- Sélectionnez un client --</option>
+      @for (client of clients; track client.id) {
+        <option [value]="client.id">
+          {{ client.nom }} {{ client.prenom }}
+        </option>
+      }
+    </select>
+
+    @if (accountForm.get('clientId')?.touched && accountForm.get('clientId')?.invalid) {
+      <small class="text-danger d-block mt-1">
+        Veuillez sélectionner un client rattaché au compte.
+      </small>
+    }
+  </div>
+
+  <!-- 2. Numéro de Compte -->
+  <div class="form-group mb-3">
+    <label for="accountNumber" class="form-label">Numéro de Compte</label>
+    <input
+      type="text"
+      id="accountNumber"
+      formControlName="accountNumber"
+      class="form-control"
+      placeholder="ex: CPT-98765432" />
+
+    @if (accountForm.get('accountNumber')?.touched && accountForm.get('accountNumber')?.invalid) {
+      <small class="text-danger d-block mt-1">
+        Le numéro de compte est obligatoire (8 caractères minimum).
+      </small>
+    }
+  </div>
+
+  <!-- 3. Type de Compte (Enum: COURANT ou EPARGNE) -->
+  <div class="form-group mb-3">
+    <label for="type" class="form-label">Type de Compte</label>
+    <select id="type" formControlName="type" class="form-select">
+      <option value="COURANT">Compte Courant</option>
+      <option value="EPARGNE">Compte Épargne</option>
+    </select>
+  </div>
+
+  <!-- 4. Solde Initial -->
+  <div class="form-group mb-4">
+    <label for="solde" class="form-label">Solde Initial (€)</label>
+    <input
+      type="number"
+      id="solde"
+      formControlName="balance"
+      class="form-control"
+      placeholder="0.00" />
+
+    @if (accountForm.get('balance')?.touched && accountForm.get('balance')?.invalid) {
+      <small class="text-danger d-block mt-1">
+        Le solde initial ne peut pas être négatif.
+      </small>
+    }
+  </div>
+
+  <!-- Bouton de Soumission -->
+  <div class="d-flex justify-content-end">
+    <button type="submit" class="btn btn-primary px-4" [disabled]="accountForm.invalid">
+      Enregistrer le compte
+    </button>
+  </div>
+</form>

@@ -1,0 +1,92 @@
+<div class="card p-4 shadow-sm border rounded">
+  <h3 class="text-primary mb-4">Ajouter un Client (Template-Driven Form)</h3>
+
+  <!-- Variable de référence #clientForm -->
+  <form #clientForm="ngForm" (ngSubmit)="saveClient(clientForm)">
+
+    <!-- Nom -->
+    <div class="form-group mb-3">
+      <label for="nom" class="form-label fw-bold">Nom</label>
+      <input
+        id="nom"
+        name="nom"
+        type="text"
+        class="form-control"
+        [(ngModel)]="clientData.nom"
+        required
+        #nomCtrl="ngModel"
+        placeholder="Entrez le nom" />
+
+      @if (nomCtrl.touched && nomCtrl.invalid) {
+        <small class="text-danger d-block mt-1">Le nom est obligatoire.</small>
+      }
+    </div>
+
+    <!-- Prénom -->
+    <div class="form-group mb-3">
+      <label for="prenom" class="form-label fw-bold">Prénom</label>
+      <input
+        id="prenom"
+        name="prenom"
+        type="text"
+        class="form-control"
+        [(ngModel)]="clientData.telephone"
+        required
+        #prenomCtrl="ngModel"
+        placeholder="Entrez le prénom" />
+
+      @if (prenomCtrl.touched && prenomCtrl.invalid) {
+        <small class="text-danger d-block mt-1">Le prénom est obligatoire.</small>
+      }
+    </div>
+
+    <!-- Email -->
+    <div class="form-group mb-3">
+      <label for="email" class="form-label fw-bold">Email</label>
+      <input
+        id="email"
+        name="email"
+        type="email"
+        class="form-control"
+        [(ngModel)]="clientData.email"
+        required
+        email
+        #emailCtrl="ngModel"
+        placeholder="exemple@email.com" />
+
+      @if (emailCtrl.touched && emailCtrl.invalid) {
+        <small class="text-danger d-block mt-1">Veuillez saisir une adresse email valide.</small>
+      }
+    </div>
+
+    <!-- Statut Client avec balise <select> standard -->
+    <div class="form-group mb-4">
+      <label for="statut" class="form-label fw-bold">Statut du Client</label>
+      <select
+        id="statut"
+        name="statut"
+        class="form-select"
+        [(ngModel)]="clientData.statut"
+        required
+        #statutCtrl="ngModel">
+        @for (s of statuts; track s.value) {
+          <option [value]="s.value">{{ s.label }}</option>
+        }
+      </select>
+
+      @if (statutCtrl.touched && statutCtrl.invalid) {
+        <small class="text-danger d-block mt-1">Veuillez sélectionner un statut.</small>
+      }
+    </div>
+
+    <!-- Bouton de soumission -->
+    <div class="d-flex justify-content-end">
+      <button
+        type="submit"
+        class="btn btn-primary px-4"
+        [disabled]="clientForm.invalid">
+        Enregistrer le client
+      </button>
+    </div>
+  </form>
+</div>

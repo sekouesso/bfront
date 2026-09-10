@@ -1,0 +1,29 @@
+<div class="container my-4">
+  <h2>Gestion des Clients Bancaires</h2>
+
+  <!-- Affichage conditionnel sans *ngIf -->
+  @if (clientSelectionne) {
+    <div class="alert alert-info">
+      <strong>Client actif :</strong> {{ clientSelectionne.nom }} {{ clientSelectionne.telephone }}
+    </div>
+  } @else {
+    <div class="alert alert-warning">
+      Aucun client sélectionné.
+    </div>
+  }
+
+  <div class="row">
+    <!-- Boucle native @for au lieu de *ngFor -->
+    @for (c of clients; track c.id) {
+      <div class="col-md-4">
+        <app-client-card
+          [client]="c"
+          [estSelectionne]="c.id === clientSelectionne?.id"
+          (selectClient)="traiterSelection($event)">
+        </app-client-card>
+      </div>
+    } @empty {
+      <p>Aucun client trouvé dans la base de données.</p>
+    }
+  </div>
+</div>
