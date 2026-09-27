@@ -1,0 +1,46 @@
+<div class="p-4">
+
+  <!-- Critères de recherche -->
+  <div class="flex gap-3 mb-4">
+    <input
+      type="text"
+      placeholder="Rechercher une opération..."
+      [value]="recherche()"
+      (input)="recherche.set($any($event.target).value)"
+      class="p-2 border rounded w-full"
+    />
+
+    <select
+      [value]="type()"
+      (change)="type.set($any($event.target).value)"
+      class="p-2 border rounded"
+    >
+      <option value="all">Tous les types</option>
+      <option value="credit">Crédit</option>
+      <option value="debit">Débit</option>
+    </select>
+  </div>
+
+  <!-- Résultat filtré -->
+  <ul class="list-none p-0">
+    @for (op of operationsFiltrees(); track op.id) {
+      <li class="flex justify-content-between p-3 border-bottom">
+        <div>
+          <strong>{{ op.libelle }}</strong>
+          <span class="text-sm text-color-secondary ml-2">
+            ({{ op.type }})
+          </span>
+        </div>
+        <div [class.text-green-600]="op.type === 'credit'"
+             [class.text-red-600]="op.type === 'debit'">
+          {{ op.montant | number }} FCFA
+        </div>
+      </li>
+    } @empty {
+      <li class="text-center p-5 text-color-secondary">
+        Aucune opération trouvée
+      </li>
+    }
+  </ul>
+
+</div>

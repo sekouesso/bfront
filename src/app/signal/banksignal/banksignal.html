@@ -1,0 +1,287 @@
+```html
+<div class="p-4">
+
+  <!-- ========================================================= -->
+  <!-- INFORMATIONS MONTANT -->
+  <!-- ========================================================= -->
+
+  <p-card header="Informations sur les frais" styleClass="mb-4">
+
+    <div class="grid">
+
+      <!-- Montant initial -->
+      <div class="col-12 md:col-4">
+        <div class="flex flex-column gap-2">
+          <span class="font-semibold text-color-secondary">
+            Montant initial
+          </span>
+
+          <span class="text-2xl font-bold">
+            {{ montantInit() }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Taux des frais -->
+      <div class="col-12 md:col-4">
+        <div class="flex flex-column gap-2">
+          <span class="font-semibold text-color-secondary">
+            Taux des frais
+          </span>
+
+          <span class="text-2xl font-bold">
+            {{ tauxFrais() }} %
+          </span>
+        </div>
+      </div>
+
+      <!-- Montant total -->
+      <div class="col-12 md:col-4">
+        <div class="flex flex-column gap-2">
+          <span class="font-semibold text-color-secondary">
+            Montant total
+          </span>
+
+          <span class="text-2xl font-bold">
+            {{ montant_total() }}
+          </span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Boutons -->
+    <div class="flex flex-wrap justify-content-end gap-2 mt-4">
+
+      <p-button
+        label="Modifier le montant"
+        icon="pi pi-pencil"
+        severity="danger"
+        (onClick)="modifierMotant()"
+      />
+
+      <p-button
+        label="Modifier le taux"
+        icon="pi pi-percentage"
+        severity="success"
+        (onClick)="modifiertauxFrais()"
+      />
+
+    </div>
+
+  </p-card>
+
+
+  <div>{{beneficiaires()|json}}</div>
+
+  <!-- ========================================================= -->
+  <!-- BENEFICIAIRES -->
+  <!-- ========================================================= -->
+
+  <div class="beneficiaires-container">
+
+    <div class="flex align-items-center justify-content-between mb-4">
+
+      <div>
+        <h2 class="m-0">
+          Liste des bénéficiaires
+        </h2>
+
+        <p class="text-color-secondary mt-2 mb-0">
+          Gérez les bénéficiaires de vos virements.
+        </p>
+      </div>
+
+    </div>
+
+
+    <!-- ======================================================= -->
+    <!-- FORMULAIRE D'AJOUT -->
+    <!-- ======================================================= -->
+
+    <p-card
+      header="Ajouter un bénéficiaire"
+      styleClass="mb-4"
+    >
+
+      <form
+        (ngSubmit)="ajouterBeneficiaire({
+          nom: nouveauNom,
+          banque: nouvelleBanque
+        })"
+      >
+
+        <div class="grid">
+
+          <!-- Nom -->
+          <div class="col-12 md:col-6">
+
+            <div class="flex flex-column gap-2">
+
+              <label
+                for="nom"
+                class="font-semibold"
+              >
+                Nom
+              </label>
+
+              <input
+                pInputText
+                id="nom"
+                name="nom"
+                [(ngModel)]="nouveauNom"
+                placeholder="Ex : Ablavi Mensah"
+                autocomplete="off"
+                class="w-full"
+                required
+              />
+
+            </div>
+
+          </div>
+
+
+          <!-- Banque -->
+          <div class="col-12 md:col-6">
+
+            <div class="flex flex-column gap-2">
+
+              <label
+                for="banque"
+                class="font-semibold"
+              >
+                Banque
+              </label>
+
+              <input
+                pInputText
+                id="banque"
+                name="banque"
+                [(ngModel)]="nouvelleBanque"
+                placeholder="Ex : Ecobank"
+                autocomplete="off"
+                class="w-full"
+                required
+              />
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <!-- Bouton ajouter -->
+        <div class="flex justify-content-end mt-4">
+
+          <p-button
+            type="submit"
+            label="Ajouter le bénéficiaire"
+            icon="pi pi-plus"
+            [disabled]="!nouveauNom || !nouvelleBanque"
+          />
+
+        </div>
+
+      </form>
+
+    </p-card>
+
+
+    <!-- ======================================================= -->
+    <!-- LISTE DES BENEFICIAIRES -->
+    <!-- ======================================================= -->
+
+    <p-card header="Bénéficiaires">
+
+      <p-table
+        [value]="beneficiaires()"
+        [tableStyle]="{ 'min-width': '40rem' }"
+        styleClass="p-datatable-sm"
+      >
+
+        <!-- HEADER -->
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Nom</th>
+            <th>Banque</th>
+            <th class="text-center" style="width: 8rem">Actions</th>
+          </tr>
+        </ng-template>
+
+        <!-- BODY -->
+        <ng-template pTemplate="body" let-beneficiaire>
+          <tr>
+            <td>
+              <span class="font-semibold">{{ beneficiaire.nom }}</span>
+            </td>
+            <td>{{ beneficiaire.banque }}</td>
+            <td class="text-center">
+              <p-button
+                icon="pi pi-trash"
+                severity="danger"
+                [text]="true"
+                [rounded]="true"
+                pTooltip="Supprimer"
+                tooltipPosition="top"
+                ariaLabel="Supprimer le bénéficiaire"
+                (onClick)="supprimerBeneficiaire(beneficiaire.id)"
+              />
+            </td>
+          </tr>
+        </ng-template>
+
+        <!-- LISTE VIDE -->
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="3" class="text-center p-5">
+              <div class="flex flex-column align-items-center gap-3">
+                <i class="pi pi-users text-4xl text-color-secondary"></i>
+                <span class="text-color-secondary">
+            Aucun bénéficiaire pour le moment.
+          </span>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+
+      </p-table>
+
+    </p-card>
+
+  </div>
+
+</div>
+
+<table border="1" cellpadding="10" cellspacing="0" style="width: 100%; border-collapse: collapse;">
+  <thead>
+  <tr style="background-color: #f5f5f5;">
+    <th>Nom</th>
+    <th>Banque</th>
+    <th style="width: 100px;">Actions</th>
+  </tr>
+  </thead>
+
+  <tbody>
+    @for (beneficiaire of beneficiaires(); track beneficiaire.id) {
+      <tr>
+        <td>{{ beneficiaire.nom }}</td>
+        <td>{{ beneficiaire.banque }}</td>
+        <td style="text-align: center;">
+          <button style="background-color: red;color: white;border-radius: 5%" (click)="supprimerBeneficiaire(beneficiaire.id)">
+            Supprimer
+          </button>
+        </td>
+      </tr>
+    } @empty {
+      <tr>
+        <td colspan="3" style="text-align: center; padding: 20px;">
+          Aucun bénéficiaire
+        </td>
+      </tr>
+    }
+  </tbody>
+</table>
+
+
+

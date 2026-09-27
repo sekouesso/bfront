@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import {BankService} from '../bank.service';
 import {Client} from '../shared/bankModel';
 import {ClientCard} from '../client-card/client-card';
+import {AddClient} from '../add-client/add-client';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-client-list',
@@ -13,6 +15,7 @@ import {ClientCard} from '../client-card/client-card';
 export class ClientList implements OnInit {
   // Injection du service
   private bankService = inject(BankService);
+  private  router= inject(Router);
 
   clients: Client[] = [];
   clientSelectionne: Client | null = null;
@@ -38,5 +41,9 @@ export class ClientList implements OnInit {
 
   traiterSelection(client: Client): void {
     this.clientSelectionne = client;
+  }
+
+  editClient(client: Client): void{
+    this.router.navigate(['clients',client.id,"edit"]);
   }
 }

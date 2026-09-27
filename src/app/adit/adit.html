@@ -1,0 +1,83 @@
+<div class="card p-4 shadow-sm border rounded">
+  <h3 class="text-primary mb-4">Modifier le Client</h3>
+
+  <!-- Debug -->
+  <pre>{{ clientData | json }}</pre>
+
+  <form #clientForm="ngForm" (ngSubmit)="updateClient(clientForm)">
+
+    <!-- Nom -->
+    <div class="form-group mb-3">
+      <label for="nom" class="form-label fw-bold">Nom</label>
+      <input
+        id="nom"
+        name="nom"
+        type="text"
+        class="form-control"
+        [(ngModel)]="clientData.nom"
+        required
+        #nomCtrl="ngModel"
+        placeholder="Entrez le nom" />
+      @if (nomCtrl.touched && nomCtrl.invalid) {
+        <small class="text-danger">Le nom est obligatoire.</small>
+      }
+    </div>
+
+    <!-- Téléphone -->
+    <div class="form-group mb-3">
+      <label for="telephone" class="form-label fw-bold">Téléphone</label>
+      <input
+        id="telephone"
+        name="telephone"
+        type="text"
+        class="form-control"
+        [(ngModel)]="clientData.telephone"
+        required
+        #telCtrl="ngModel"
+        placeholder="Entrez le téléphone" />
+      @if (telCtrl.touched && telCtrl.invalid) {
+        <small class="text-danger">Le téléphone est obligatoire.</small>
+      }
+    </div>
+
+    <!-- Email -->
+    <div class="form-group mb-3">
+      <label for="email" class="form-label fw-bold">Email</label>
+      <input
+        id="email"
+        name="email"
+        type="email"
+        class="form-control"
+        [(ngModel)]="clientData.email"
+        required
+        email
+        #emailCtrl="ngModel"
+        placeholder="exemple@email.com" />
+      @if (emailCtrl.touched && emailCtrl.invalid) {
+        <small class="text-danger">Email invalide.</small>
+      }
+    </div>
+
+    <!-- Statut -->
+    <div class="form-group mb-4">
+      <label for="statut" class="form-label fw-bold">Statut</label>
+      <select
+        id="statut"
+        name="statut"
+        class="form-select"
+        [(ngModel)]="clientData.statut"
+        required
+        #statutCtrl="ngModel">
+        @for (s of statuts; track s.value) {
+          <option [value]="s.value">{{ s.label }}</option>
+        }
+      </select>
+    </div>
+
+    <div class="d-flex justify-content-end">
+      <button type="submit" class="btn btn-primary px-4" [disabled]="clientForm.invalid">
+        Enregistrer
+      </button>
+    </div>
+  </form>
+</div>

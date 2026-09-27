@@ -19,7 +19,9 @@
         <app-client-card
           [client]="c"
           [estSelectionne]="c.id === clientSelectionne?.id"
-          (selectClient)="traiterSelection($event)">
+          (selectClient)="traiterSelection($event)"
+          (modifierClient)="editClient($event)"
+        >
         </app-client-card>
       </div>
     } @empty {

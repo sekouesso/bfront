@@ -5,7 +5,7 @@ import {Client} from '../shared/bankModel';
   selector: 'app-client-card',
   template: `
     <div class="card p-3 mb-2 border rounded" [class.border-primary]="estSelectionne">
-      <h4>{{ client.prenom }} {{ client.nom }}</h4>
+      <h4>{{ client.nom }} {{ client.telephone }}</h4>
       <p><strong>Email :</strong> {{ client.email }}</p>
 
       <!-- Utilisation du nouveau bloc @if au lieu de *ngIf -->
@@ -19,6 +19,9 @@ import {Client} from '../shared/bankModel';
         <button class="btn btn-outline-primary btn-sm" (click)="onSelect()">
           Sélectionner ce client
         </button>
+        <button class="btn btn-outline-warning btn-sm" (click)="onModifClient()">
+          modifier ce client
+        </button>
       </div>
     </div>
   `
@@ -28,6 +31,8 @@ export class ClientCard {
   @Input() estSelectionne: boolean = false;
 
   @Output() selectClient = new EventEmitter<Client>();
+  @Output() modifierClient = new EventEmitter<Client>();
+
 
   ngOnInit() {
     console.log(this.client);
@@ -36,4 +41,10 @@ export class ClientCard {
   onSelect(): void {
     this.selectClient.emit(this.client);
   }
+
+  onModifClient(): void {
+    this.modifierClient.emit(this.client);
+  }
+
+
 }
