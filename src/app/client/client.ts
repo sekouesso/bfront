@@ -1,49 +1,52 @@
-import { Component, OnInit, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import {BankService} from '../bank.service';
-import {Client} from '../shared/bankModel';
-import {ClientCard} from '../client-card/client-card';
-import {AddClient} from '../add-client/add-client';
-import {Router} from '@angular/router';
+import { Component, OnInit, inject, signal } from '@angular/core';
+import { Router } from '@angular/router';
+import { BankService } from '../bank.service';
+import { Client } from '../shared/bankModel';
+import { ClientCard } from '../client-card/client-card';
 
 @Component({
   selector: 'app-client-list',
   standalone: true,
-  imports: [CommonModule, ClientCard],
+  imports: [ClientCard],
   templateUrl: './client.html'
 })
 export class ClientList implements OnInit {
-  // Injection du service
-  private bankService = inject(BankService);
-  private  router= inject(Router);
+  private readonly bankService = inject(BankService);
+  private readonly router = inject(Router);
 
-  clients: Client[] = [];
-  clientSelectionne: Client | null = null;
-  errorMessage: string = '';
+  // Signals pour l'état du composant
+  readonly clients = signal<Client[]>([]);
+  readonly clientSelectionne = signal<Client | null>(null);
+  readonly errorMessage = signal<string>('');
+  readonly isLoading = signal<boolean>(false);
 
   ngOnInit(): void {
     this.chargerClients();
   }
 
   chargerClients(): void {
-    // Souscription à l'Observable renvoyé par le service
+    this.isLoading.set(true);
+    this.errorMessage.set('');
+
     this.bankService.getClients().subscribe({
-      next: (data:any) => {
-        this.clients = data.content;
-        console.log(this.clients);
+      next: (data: any) => {
+        this.clients.set(data.content ?? []);
+        this.isLoading.set(false);
       },
       error: (err) => {
-        this.errorMessage = 'Erreur lors du chargement des clients.';
+        this.errorMessage.set('Erreur lors du chargement des clients.');
+        this.isLoading.set(false);
         console.error(err);
       }
     });
   }
 
   traiterSelection(client: Client): void {
-    this.clientSelectionne = client;
+    //this.clientSelectionne.set(client);
+    this.router.navigate(['upload', client.id]);
   }
 
-  editClient(client: Client): void{
-    this.router.navigate(['clients',client.id,"edit"]);
+  editClient(client: Client): void {
+    this.router.navigate(['clients', client.id, 'edit']);
   }
 }

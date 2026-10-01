@@ -1,31 +1,41 @@
-<div class="container my-4">
-  <h2>Gestion des Clients Bancaires</h2>
+<div class="container mx-auto p-6">
+  <div class="flex items-center justify-between mb-6">
+    <h1 class="text-2xl font-bold text-gray-800">Liste des Clients</h1>
+    <button
+      (click)="chargerClients()"
+      class="px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition"
+      [disabled]="isLoading()">
+      {{ isLoading() ? 'Chargement...' : 'Actualiser' }}
+    </button>
+  </div>
 
-  <!-- Affichage conditionnel sans *ngIf -->
-  @if (clientSelectionne) {
-    <div class="alert alert-info">
-      <strong>Client actif :</strong> {{ clientSelectionne.nom }} {{ clientSelectionne.telephone }}
-    </div>
-  } @else {
-    <div class="alert alert-warning">
-      Aucun client sélectionné.
+  @if (errorMessage()) {
+    <div class="p-4 mb-6 text-sm text-red-800 bg-red-100 rounded-lg border border-red-200">
+      {{ errorMessage() }}
     </div>
   }
 
-  <div class="row">
-    <!-- Boucle native @for au lieu de *ngFor -->
-    @for (c of clients; track c.id) {
-      <div class="col-md-4">
-        <app-client-card
-          [client]="c"
-          [estSelectionne]="c.id === clientSelectionne?.id"
-          (selectClient)="traiterSelection($event)"
-          (modifierClient)="editClient($event)"
-        >
-        </app-client-card>
+  @if (isLoading()) {
+    <div class="flex justify-center items-center py-12">
+      <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+    </div>
+  } @else {
+    @if (clients().length > 0) {
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        @for (client of clients(); track client.id) {
+          <!-- Utilisation des noms exacts des outputs : (selectClient) et (modifierClient) -->
+          <app-client-card
+            [client]="client"
+            [isSelected]="clientSelectionne()?.id === client.id"
+            (selectClient)="traiterSelection($event)"
+            (modifierClient)="editClient($event)">
+          </app-client-card>
+        }
       </div>
-    } @empty {
-      <p>Aucun client trouvé dans la base de données.</p>
+    } @else {
+      <div class="text-center py-12 text-gray-500">
+        Aucun client trouvé.
+      </div>
     }
-  </div>
+  }
 </div>

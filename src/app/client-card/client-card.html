@@ -1,1 +1,47 @@
-<p>client-card works!</p>
+<div
+  class="p-4 border rounded-xl bg-white shadow-sm transition-all hover:shadow-md"
+  [class.border-blue-500]="isSelected()"
+  [class.ring-2]="isSelected()"
+  [class.ring-blue-200]="isSelected()"
+  [class.border-gray-200]="!isSelected()">
+
+  <div class="flex items-start justify-between mb-2">
+    <div>
+      <h3 class="font-bold text-gray-900 text-lg">
+        {{ client().nom }}
+      </h3>
+      <p class="text-sm text-gray-500">
+        {{ client().telephone }}
+      </p>
+    </div>
+
+    @if (isActif()) {
+      <span class="px-2.5 py-0.5 text-xs font-semibold rounded-full bg-green-100 text-green-800">
+        Compte Actif
+      </span>
+    } @else {
+      <span class="px-2.5 py-0.5 text-xs font-semibold rounded-full bg-red-100 text-red-800">
+        Compte Inactif
+      </span>
+    }
+  </div>
+
+  <p class="text-sm text-gray-600 mb-4">
+    <strong class="font-medium text-gray-700">Email :</strong> {{ client().email }}
+  </p>
+
+  <div class="flex gap-2 pt-2 border-t border-gray-100">
+    <button
+      type="button"
+      (click)="onSelect()"
+      class="flex-1 px-3 py-1.5 text-xs font-medium rounded-lg text-blue-700 bg-blue-50 hover:bg-blue-100 transition">
+      Sélectionner
+    </button>
+    <button
+      type="button"
+      (click)="onModifClient()"
+      class="flex-1 px-3 py-1.5 text-xs font-medium rounded-lg text-amber-700 bg-amber-50 hover:bg-amber-100 transition">
+      Modifier
+    </button>
+  </div>
+</div>

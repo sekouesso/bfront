@@ -22,6 +22,16 @@ export class BankService {
 
   }
 
+  /**
+   * Upload de la photo du client
+   */
+  uploadPhoto(clientId: number, file: File): Observable<Client> {
+    const formData = new FormData();
+    formData.append('file', file); // Correspond à @RequestParam("file")
+
+    return this.http.post<Client>(`${this.apiUrl}/${clientId}/photo`, formData);
+  }
+
 
   /** Créer un nouveau client */
   createClient(client: Client): Observable<Client> {
